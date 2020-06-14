@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:preferencias_usuario/src/misWidgets/menu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class PaginaAjustes extends StatefulWidget {
   static final String routeName = 'ajustes';
@@ -9,17 +11,25 @@ class PaginaAjustes extends StatefulWidget {
 }
 
 class _PaginaAjustesState extends State<PaginaAjustes> {
-  bool _colorSecundario = false;
-  int _genero = 1;
+  bool   _colorSecundario = false;
+  int    _genero = 1;
   String _nombre = 'Pedro';
   TextEditingController _textControler;
   
   @override ///metodo que se ejecuta apenas se inicializa este estado osea cuando ingresa a esta pagina
   void initState() { 
     super.initState();
+    cargarPreferencias();  
     _textControler = new TextEditingController(text: _nombre);  
   }
   
+  cargarPreferencias() async{
+    SharedPreferences preferencias = await SharedPreferences.getInstance();
+    _genero =  preferencias.getInt('genero');
+    setState(() {});
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,10 +86,10 @@ class _PaginaAjustesState extends State<PaginaAjustes> {
     );
   }
 
-  void _setSelectedRsdio(int value) {
+  /* Future<void> */ _setSelectedRsdio(int value) async {
+    SharedPreferences preferencias = await SharedPreferences.getInstance();
+    /* await */ preferencias.setInt('genero', value);
     _genero = value;
-    setState(() {
-      
-    });
+    setState(() {});
   }
 }
