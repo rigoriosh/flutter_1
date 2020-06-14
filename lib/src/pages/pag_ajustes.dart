@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:preferencias_usuario/src/misWidgets/menu.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:preferencias_usuario/src/preferencias/usuario.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 
 class PaginaAjustes extends StatefulWidget {
@@ -11,23 +12,28 @@ class PaginaAjustes extends StatefulWidget {
 }
 
 class _PaginaAjustesState extends State<PaginaAjustes> {
-  bool   _colorSecundario = false;
+  bool   _colorSecundario;
   int    _genero = 1;
-  String _nombre = 'Pedro';
+  String _nombre;
   TextEditingController _textControler;
-  
+  final preferenciasUsaurio = new PreferenciasUsaurio();
+ 
   @override ///metodo que se ejecuta apenas se inicializa este estado osea cuando ingresa a esta pagina
   void initState() { 
     super.initState();
-    cargarPreferencias();  
-    _textControler = new TextEditingController(text: _nombre);  
+    preferenciasUsaurio.lastPage = PaginaAjustes.routeName;
+    this._genero = preferenciasUsaurio.genero;
+    this._colorSecundario = preferenciasUsaurio.colorSecundario;
+    this._nombre = this.preferenciasUsaurio.nombreUsuario;
+    //cargarPreferencias();  
+    _textControler = new TextEditingController(text: this.preferenciasUsaurio.nombreUsuario);  
   }
   
-  cargarPreferencias() async{
+  /* cargarPreferencias() async{
     SharedPreferences preferencias = await SharedPreferences.getInstance();
     _genero =  preferencias.getInt('genero');
     setState(() {});
-  }
+  } */
 
 
   @override
@@ -35,6 +41,7 @@ class _PaginaAjustesState extends State<PaginaAjustes> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Ajustes'),
+        backgroundColor: this.preferenciasUsaurio.colorSecundario ? Colors.teal : Colors.blue[400],
       ),
       drawer: MenuWidget(),
       body: ListView(
@@ -50,9 +57,10 @@ class _PaginaAjustesState extends State<PaginaAjustes> {
           SwitchListTile(
               value: _colorSecundario,
               title: Text('Color secundario'),
-              onChanged: (boleano) {
+              onChanged: (value) {
                 setState(() {
-                  _colorSecundario = boleano;
+                  this._colorSecundario = value;
+                  this.preferenciasUsaurio.colorSecundario = value;
                 });
               }),
           RadioListTile(
@@ -75,8 +83,8 @@ class _PaginaAjustesState extends State<PaginaAjustes> {
                 labelText: 'Nombre',
                 helperText: 'Nombre de la persona usando el telefono '
               ),
-              onChanged: (string){
-
+              onChanged: (value){
+                this.preferenciasUsaurio.nombreUsuario = value;
               },
             ),
           ),
@@ -87,9 +95,9 @@ class _PaginaAjustesState extends State<PaginaAjustes> {
   }
 
   /* Future<void> */ _setSelectedRsdio(int value) async {
-    SharedPreferences preferencias = await SharedPreferences.getInstance();
-    /* await */ preferencias.setInt('genero', value);
-    _genero = value;
+  
+    this.preferenciasUsaurio.genero = value;
+    this._genero = value;
     setState(() {});
   }
 }

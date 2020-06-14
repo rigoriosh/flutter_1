@@ -11,21 +11,22 @@ class PaginaInicio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    preferenciasUsaurio.inicializarPrefetencias();
-    
+    //preferenciasUsaurio.inicializarPrefetencias();
+    preferenciasUsaurio.lastPage = PaginaInicio.routeName;
     return Scaffold(
       appBar: AppBar(
         title: Text('Preferencias de usuario'),
+        backgroundColor: this.preferenciasUsaurio.colorSecundario ? Colors.teal : Colors.blue[400],
       ),
       drawer: MenuWidget(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Color Secundario: '),
+          Text('Color Secundario: ${this.preferenciasUsaurio.colorSecundario}'),
           Divider(),
           Text('Genero: ${preferenciasUsaurio.genero}'),
           Divider(),
-          Text('Nombre Usuario:'),
+          Text('Nombre Usuario: ${this.preferenciasUsaurio.nombreUsuario}'),
           Divider(),
         ],
       ),
